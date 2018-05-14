@@ -80,11 +80,22 @@
             this.dgvRute = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.dgvSavings = new System.Windows.Forms.DataGridView();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btCalcul = new System.Windows.Forms.Button();
+            this.tbNumarFisiere = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.btSelDestinatie = new System.Windows.Forms.Button();
+            this.btSelSursa = new System.Windows.Forms.Button();
+            this.tbDestinatie = new System.Windows.Forms.TextBox();
+            this.tbSursa = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.btnPrecalcul = new System.Windows.Forms.Button();
             this.btClose = new System.Windows.Forms.Button();
             this.btExportFile = new System.Windows.Forms.Button();
             this.btLoadFile = new System.Windows.Forms.Button();
             this.btRoute = new System.Windows.Forms.Button();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -99,6 +110,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvRute)).BeginInit();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSavings)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -130,6 +142,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -610,6 +623,106 @@
             this.dgvSavings.Size = new System.Drawing.Size(689, 383);
             this.dgvSavings.TabIndex = 5;
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.btCalcul);
+            this.tabPage2.Controls.Add(this.tbNumarFisiere);
+            this.tabPage2.Controls.Add(this.label18);
+            this.tabPage2.Controls.Add(this.btSelDestinatie);
+            this.tabPage2.Controls.Add(this.btSelSursa);
+            this.tabPage2.Controls.Add(this.tbDestinatie);
+            this.tabPage2.Controls.Add(this.tbSursa);
+            this.tabPage2.Controls.Add(this.label17);
+            this.tabPage2.Controls.Add(this.label16);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(689, 383);
+            this.tabPage2.TabIndex = 5;
+            this.tabPage2.Text = "Batch Run";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // btCalcul
+            // 
+            this.btCalcul.Location = new System.Drawing.Point(606, 343);
+            this.btCalcul.Name = "btCalcul";
+            this.btCalcul.Size = new System.Drawing.Size(75, 23);
+            this.btCalcul.TabIndex = 9;
+            this.btCalcul.Text = "Start Calcul";
+            this.btCalcul.UseVisualStyleBackColor = true;
+            this.btCalcul.Click += new System.EventHandler(this.btCalcul_Click);
+            // 
+            // tbNumarFisiere
+            // 
+            this.tbNumarFisiere.Location = new System.Drawing.Point(177, 206);
+            this.tbNumarFisiere.Name = "tbNumarFisiere";
+            this.tbNumarFisiere.ReadOnly = true;
+            this.tbNumarFisiere.Size = new System.Drawing.Size(100, 20);
+            this.tbNumarFisiere.TabIndex = 8;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(63, 209);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(68, 13);
+            this.label18.TabIndex = 7;
+            this.label18.Text = "Numar fisiere";
+            // 
+            // btSelDestinatie
+            // 
+            this.btSelDestinatie.Location = new System.Drawing.Point(484, 171);
+            this.btSelDestinatie.Name = "btSelDestinatie";
+            this.btSelDestinatie.Size = new System.Drawing.Size(96, 23);
+            this.btSelDestinatie.TabIndex = 5;
+            this.btSelDestinatie.Text = "Alege Destinatia";
+            this.btSelDestinatie.UseVisualStyleBackColor = true;
+            this.btSelDestinatie.Click += new System.EventHandler(this.btSelDestinatie_Click);
+            // 
+            // btSelSursa
+            // 
+            this.btSelSursa.Location = new System.Drawing.Point(484, 135);
+            this.btSelSursa.Name = "btSelSursa";
+            this.btSelSursa.Size = new System.Drawing.Size(96, 23);
+            this.btSelSursa.TabIndex = 4;
+            this.btSelSursa.Text = "Alege Sursa";
+            this.btSelSursa.UseVisualStyleBackColor = true;
+            this.btSelSursa.Click += new System.EventHandler(this.btSelSursa_Click);
+            // 
+            // tbDestinatie
+            // 
+            this.tbDestinatie.Location = new System.Drawing.Point(177, 171);
+            this.tbDestinatie.Name = "tbDestinatie";
+            this.tbDestinatie.ReadOnly = true;
+            this.tbDestinatie.Size = new System.Drawing.Size(276, 20);
+            this.tbDestinatie.TabIndex = 3;
+            // 
+            // tbSursa
+            // 
+            this.tbSursa.Location = new System.Drawing.Point(177, 138);
+            this.tbSursa.Name = "tbSursa";
+            this.tbSursa.ReadOnly = true;
+            this.tbSursa.Size = new System.Drawing.Size(276, 20);
+            this.tbSursa.TabIndex = 2;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(63, 174);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(94, 13);
+            this.label17.TabIndex = 1;
+            this.label17.Text = "Director Destinatie";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(63, 141);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(74, 13);
+            this.label16.TabIndex = 0;
+            this.label16.Text = "Director Sursa";
+            // 
             // btnPrecalcul
             // 
             this.btnPrecalcul.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -691,6 +804,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvRute)).EndInit();
             this.tabPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSavings)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -754,5 +869,16 @@
         private System.Windows.Forms.Button btExportFile;
         private System.Windows.Forms.Button btLoadFile;
         private System.Windows.Forms.Button btRoute;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Button btSelDestinatie;
+        private System.Windows.Forms.Button btSelSursa;
+        private System.Windows.Forms.TextBox tbDestinatie;
+        private System.Windows.Forms.TextBox tbSursa;
+        private System.Windows.Forms.TextBox tbNumarFisiere;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Button btCalcul;
     }
 }

@@ -14,6 +14,7 @@ namespace TurneeBatch
     public partial class frmMain : Form
     {
         private static string fileName;
+        private static string logfileName;
         private parametriRute pr = new parametriRute();
         private listaDistanteOR DistanteOR = new listaDistanteOR();
         private listaClienti Clienti = new listaClienti();
@@ -126,6 +127,50 @@ namespace TurneeBatch
                 }
             }
         }
+        private bool LoadClientiFile(string fileName)
+        {
+            //un singur rand va fi ignorat ca fiind capul de tabel
+            //DistanteOR.LoadFile();
+            if (File.Exists(fileName))
+                try
+                {
+                    Rute.Reset();
+                    Savings.Reset();
+                    Clienti.Reset();
+                    pr.Reset();
+                    using (StreamReader sr = new StreamReader(fileName))
+                    {
+                        sr.ReadLine(); 
+                        while (!sr.EndOfStream)
+                        {
+                            var line = sr.ReadLine();
+                            var lineWords = line.Split(';');
+                            double dLon, dLat, dVolPGS, dVolGRC, dVolART, dVolTOT, dDist;
+                            double.TryParse(lineWords[4], out dLat);
+                            double.TryParse(lineWords[5], out dLon);
+                            double.TryParse(lineWords[6], out dVolPGS);
+                            double.TryParse(lineWords[7], out dVolGRC);
+                            double.TryParse(lineWords[8], out dVolART);
+                            double.TryParse(lineWords[9], out dVolTOT);
+                            double.TryParse(lineWords[10], out dDist);
+                            Clienti.Add(new client(lineWords[0], lineWords[1], lineWords[2], lineWords[3], dLat, dLon,
+                                dVolPGS, dVolGRC, dVolART, dVolTOT, dDist, pr.MarjaEroareDistanta));
+                        }
+                    }
+                    StadiuCalcul = stadiu.S1_Clienti;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Eroare in fisierul de date. Verificati formatul delimitatorului precum si continutul fisierului." +
+                        Environment.NewLine +
+                        Environment.NewLine + "<" + ex.Message + ">", "Fisier", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return false;
+                }
+            else
+                MessageBox.Show("Fisierul nu exista.");
+            return true;
+        }
+
         private void PrecalculRute()
         {
             int NrCamioaneSD, newRTnumber;
@@ -137,7 +182,7 @@ namespace TurneeBatch
                     start = false;
             if (start)
             {
-                WriteLogLine(" -- START PRECALCUL RUTE --");
+                //WriteLogLine(" -- START PRECALCUL RUTE --");
                 Rute.Reset();
                 Savings.Reset();
                 pr.Reset();
@@ -158,16 +203,16 @@ namespace TurneeBatch
                         pr.InregistreazaCamion("", tipCamSD);
                         Clienti.ModificaVolumeSD(Clienti.Lista[i].ClCode, volSD, volRout, NrCamioaneSD);
                         volSD = pr.VolumPosibilSD(Clienti.Lista[i].VolumPentruRute);
-                        WriteLogLine(" Add ruta SD - " + newRTnumber + " - " + Clienti.Lista[i].ClCode);
+                        //WriteLogLine(" Add ruta SD - " + newRTnumber + " - " + Clienti.Lista[i].ClCode);
                     }
                 }
-                WriteLogLine(" -- END PRECALCUL RUTE --");
+                //WriteLogLine(" -- END PRECALCUL RUTE --");
                 StadiuCalcul = stadiu.S2_Precalcul;
             }
         }
         private void CalculSavings()
         {
-            WriteLogLine(" -- START CALCUL SAVINGS --");
+            //WriteLogLine(" -- START CALCUL SAVINGS --");
             for (int i = 0; i <= Clienti.Lista.Count - 1; i++)
                 if ((Clienti.Lista[i].VolumPentruRute > 0) && (Clienti.Lista[i].ExclusDinRute == false))
                     for (int j = 0; j <= Clienti.Lista.Count - 1; j++)
@@ -177,7 +222,7 @@ namespace TurneeBatch
                                     Clienti.Lista[i].VolumPentruRute, Clienti.Lista[j].VolumPentruRute,
                                     Clienti.Lista[i].Distanta(Clienti.Lista[j], pr.MarjaEroareDistanta),
                                     Clienti.Lista[j].DistantaOR - Clienti.Lista[j].Distanta(Clienti.Lista[i], pr.MarjaEroareDistanta)));
-            WriteLogLine(" -- END CALCUL SAVINGS --");
+            //WriteLogLine(" -- END CALCUL SAVINGS --");
         }
         private void CalculRute()
         {
@@ -188,7 +233,7 @@ namespace TurneeBatch
                 MessageBox.Show("Exista rute calculate. Nu puteti continua!", "Calcul rute", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             else
             {
-                WriteLogLine(" -- START CALCUL RUTE --");
+                //WriteLogLine(" -- START CALCUL RUTE --");
                 CalculSavings();
                 for (int i = 0; i <= Savings.Lista.Count - 1; i++)
                     if (Savings.Lista[i].SavingValue > 0)
@@ -211,7 +256,7 @@ namespace TurneeBatch
                                 Clienti.ModificaDupaAdaugareRT(from.ClCode, Rute.RutaCuStartCode(from.ClCode, "RT").NumarRuta, "First", volfr);
                                 Clienti.ModificaDupaAdaugareRT(to.ClCode, Rute.RutaCuStartCode(from.ClCode, "RT").NumarRuta, "Last", volto);
                                 Savings.Lista[i].Utilizare = "RT noua";
-                                WriteLogLine("Add ruta RT - " + Rute.Lista.Count.ToString() + ": " + from.ClCode + " - " + to.ClCode);
+                                //WriteLogLine("Add ruta RT - " + Rute.Lista.Count.ToString() + ": " + from.ClCode + " - " + to.ClCode);
                             }
                         }
                         #endregion
@@ -233,7 +278,7 @@ namespace TurneeBatch
                                 }
                                 Clienti.ModificaDupaAdaugareRT(from.ClCode, from.NumarRuta, "Mid", 0);
                                 Clienti.ModificaDupaAdaugareRT(to.ClCode, from.NumarRuta, "Last", volto);
-                                WriteLogLine("Add new END la ruta - " + from.NumarRuta + ": " + from.ClCode + " - " + to.ClCode);
+                                //WriteLogLine("Add new END la ruta - " + from.NumarRuta + ": " + from.ClCode + " - " + to.ClCode);
                                 Savings.Lista[i].Utilizare = "RT new END";
                             }
                         }
@@ -256,7 +301,7 @@ namespace TurneeBatch
                                 }
                                 Clienti.ModificaDupaAdaugareRT(from.ClCode, to.NumarRuta, "First", volfr);
                                 Clienti.ModificaDupaAdaugareRT(to.ClCode, to.NumarRuta, "Mid", 0);
-                                WriteLogLine("Add new START la ruta - " + to.NumarRuta + ": " + from.ClCode + " - " + to.ClCode);
+                                //WriteLogLine("Add new START la ruta - " + to.NumarRuta + ": " + from.ClCode + " - " + to.ClCode);
                                 Savings.Lista[i].Utilizare = "RT new START";
                             }
                         }
@@ -286,7 +331,7 @@ namespace TurneeBatch
                                         Rute.ModificaTipCamion(rtPosibila1.NumarRuta, tipPosibilCamion);
                                     }
                                     pr.InregistreazaCamion(rtPosibila2.TipCamion, "");
-                                    WriteLogLine("LINK Rute - " + rtPosibila1.NumarRuta + " <- " + rtPosibila2.NumarRuta + ": " + from.ClCode + " - " + to.ClCode);
+                                    //WriteLogLine("LINK Rute - " + rtPosibila1.NumarRuta + " <- " + rtPosibila2.NumarRuta + ": " + from.ClCode + " - " + to.ClCode);
                                     Savings.Lista[i].Utilizare = "RT LINK";
                                 }
                             }
@@ -361,6 +406,24 @@ namespace TurneeBatch
             else
             {
                 log = File.AppendText(@"D:\TourBuilderLog.txt");
+            }
+
+            // Write to the file:
+            log.WriteLine(DateTime.Now + " - " + logtext);
+
+            // Close the stream:
+            log.Close();
+        }
+        public void WriteLogLine(string filename, string logtext)
+        {
+            StreamWriter log;
+            if (!File.Exists(filename))
+            {
+                log = new StreamWriter(filename);
+            }
+            else
+            {
+                log = File.AppendText(filename);
             }
 
             // Write to the file:
@@ -463,6 +526,144 @@ namespace TurneeBatch
             {
                 SaveSettings();
                 this.Close();
+            }
+        }
+
+        private void btSelSursa_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                tbSursa.Text = folderBrowserDialog1.SelectedPath;
+            }
+            int FileCount = Directory.GetFiles(tbSursa.Text, "*.csv", SearchOption.AllDirectories).Length;
+            tbNumarFisiere.Text = FileCount.ToString();
+        }
+        private void btSelDestinatie_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                tbDestinatie.Text = folderBrowserDialog1.SelectedPath;
+                logfileName = tbDestinatie.Text + @"\\BatchLog.txt";
+            }
+        }
+
+        private bool BatchVerify(string sourceFolder)
+        {
+            foreach (string file in Directory.EnumerateFiles(sourceFolder, "*.csv"))
+            {
+                try
+                {
+                    StadiuCalcul = stadiu.S0_Null;
+                    if (!(LoadClientiFile(file)))
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+        private void BatchExportResult(string fileName, string sursa)
+        {
+            if (StadiuCalcul >= stadiu.S2_Precalcul)
+            {
+                int stopno;
+                StreamWriter log;
+                string line, rtno;
+                string infoRulare;
+                infoRulare = DateTime.Now.Year.ToString() + "-" +
+                    right(DateTime.Now.Month.ToString(), 2) + "-" +
+                    right(DateTime.Now.Day.ToString(), 2) + " " +
+                    right(DateTime.Now.Hour.ToString(), 2) +
+                    right(DateTime.Now.Minute.ToString(), 2);
+                //fileName = @"D:\ListaTurnee " + infoRulare + ".csv";
+                if (!File.Exists(fileName))
+                {
+                    log = new StreamWriter(fileName);
+                }
+                else
+                {
+                    log = File.CreateText(fileName);
+                }
+                log.WriteLine("FisierSursa;InfoRutare;RouteNo;StopNo;IncarcareNo;ClientCode;ShipToAddrCode;ShipToAddrName;DeliveryZone;StopLatitude;StopLongitude;StopVolume");
+                for (int i = 0; i <= Rute.Lista.Count - 1; i++)
+                {
+                    rtno = "000" + Rute.Lista[i].NumarRuta.ToString();
+                    line = sursa + ";" + infoRulare + ";" +
+                        "R" + rtno.Substring(rtno.Length - 3) + ";0;0;DOR;DOR;Depozit Oradea;none;47.080;21.890;0";
+                    log.WriteLine(line);
+                    stopno = 1;
+                    for (int j = 0; j <= Rute.Lista[i].ListaStopuri.Count - 1; j++)
+                    {
+                        line = sursa + ";" + infoRulare + ";";
+                        line += "R" + rtno.Substring(rtno.Length - 3) + ";";
+                        line += stopno.ToString() + ";";
+                        line += (Rute.Lista[i].ListaStopuri.Count - stopno + 1).ToString() + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).StCode + ";";
+                        line += Rute.Lista[i].ListaStopuri[j].Stop + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).ClNume + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).StDlZone + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).Latitudine + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).Longitudine + ";";
+                        line += Rute.Lista[i].ListaStopuri[j].Volum.ToString();
+                        log.WriteLine(line);
+                        stopno++;
+                    }
+                }
+                log.Close();
+                Cursor.Current = Cursors.Default;
+                //MessageBox.Show("Fisierul a fost salvat!", "Export fisier turnee", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+                WriteLogLine(logfileName,"Nu au fost calculate rute!");
+        }
+        private void BatchCalcul(string sourceFolder)
+        {
+            WriteLogLine(logfileName, "Batch process start =================================");
+            if (tbSursa.Text == tbDestinatie.Text)
+            {
+                MessageBox.Show("Sursa este identica cu destinatia. Programul nu poate continua.");
+                return;
+            }
+            Cursor.Current = Cursors.WaitCursor;
+            foreach (string file in Directory.EnumerateFiles(sourceFolder, "*.csv"))
+            {
+              try
+                {
+                    WriteLogLine(logfileName, "Process file -> " + Path.GetFileNameWithoutExtension(file));
+                    StadiuCalcul = stadiu.S0_Null;
+                    LoadClientiFile(file);
+                    PrecalculRute();
+                    CalculSavings();
+                    CalculRute();
+                    BatchExportResult(tbDestinatie.Text + @"\\" + Path.GetFileName(file), Path.GetFileNameWithoutExtension(file));
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                    WriteLogLine(logfileName, "Batch process error -> " + e.Message);
+                }
+            }
+            Cursor.Current = Cursors.Default;
+            WriteLogLine(logfileName, "Batch process end =================================");
+            MessageBox.Show("Fisierele au fost salvate in directorul destinatie!", "Export fisier turnee", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        private void btCalcul_Click(object sender, EventArgs e)
+        {
+            if (tbDestinatie.Text == "")
+            {
+                MessageBox.Show("Directorul destinatie nu este setat.");
+            }
+            else
+            {
+                if (BatchVerify(tbSursa.Text))
+                {
+                    BatchCalcul(tbSursa.Text);
+                }
             }
         }
     }
