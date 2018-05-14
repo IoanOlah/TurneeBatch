@@ -374,5 +374,96 @@ namespace TurneeBatch
             instr = "0000000" + instr;
             return instr.Substring(instr.Length - numcar);
         }
+
+        private void btLoadFile_Click(object sender, EventArgs e)
+        {
+            LoadClientiFile();
+            dgvClienti.DataSource = Clienti.Lista;
+            dgvSavings.DataSource = Savings.Lista;
+            dgvRute.DataSource = Rute.Lista;
+        }
+        private void btnPrecalcul_Click(object sender, EventArgs e)
+        {
+            PrecalculRute();
+            dgvClienti.DataSource = Clienti.Lista;
+            dgvSavings.DataSource = Savings.Lista;
+            dgvRute.DataSource = Rute.Lista;
+        }
+        private void btRoute_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            CalculRute();
+            dgvClienti.DataSource = Clienti.Lista;
+            dgvSavings.DataSource = Savings.Lista;
+            dgvRute.DataSource = Rute.Lista;
+            Cursor.Current = Cursors.Default;
+        }
+        private void btExportFile_Click(object sender, EventArgs e)
+        {
+            if (StadiuCalcul >= stadiu.S2_Precalcul)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                int stopno;
+                StreamWriter log;
+                string line, rtno;
+                string infoRulare, fileName;
+                infoRulare = DateTime.Now.Year.ToString() + "-" +
+                    right(DateTime.Now.Month.ToString(), 2) + "-" +
+                    right(DateTime.Now.Day.ToString(), 2) + " " +
+                    right(DateTime.Now.Hour.ToString(), 2) +
+                    right(DateTime.Now.Minute.ToString(), 2);
+                fileName = @"D:\ListaTurnee " + infoRulare + ".csv";
+                if (!File.Exists(fileName))
+                {
+                    log = new StreamWriter(fileName);
+                }
+                else
+                {
+                    log = File.CreateText(fileName);
+                }
+                log.WriteLine("CentruResponsabilitate;InfoRutare;RouteNo;StopNo;IncarcareNo;ClientCode;ShipToAddrCode;ShipToAddrName;DeliveryZone;StopLatitude;StopLongitude;StopVolume");
+                for (int i = 0; i <= Rute.Lista.Count - 1; i++)
+                {
+                    rtno = "000" + Rute.Lista[i].NumarRuta.ToString();
+                    line = pr.CentruResponsabilitate + ";" + infoRulare + ";" +
+                        "R" + rtno.Substring(rtno.Length - 3) + ";0;0;DOR;DOR;Depozit Oradea;none;47.080;21.890;0";
+                    log.WriteLine(line);
+                    stopno = 1;
+                    for (int j = 0; j <= Rute.Lista[i].ListaStopuri.Count - 1; j++)
+                    {
+                        line = pr.CentruResponsabilitate + ";" + infoRulare + ";";
+                        line += "R" + rtno.Substring(rtno.Length - 3) + ";";
+                        line += stopno.ToString() + ";";
+                        line += (Rute.Lista[i].ListaStopuri.Count - stopno + 1).ToString() + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).StCode + ";";
+                        line += Rute.Lista[i].ListaStopuri[j].Stop + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).ClNume + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).StDlZone + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).Latitudine + ";";
+                        line += Clienti.Client(Rute.Lista[i].ListaStopuri[j].Stop).Longitudine + ";";
+                        line += Rute.Lista[i].ListaStopuri[j].Volum.ToString();
+                        log.WriteLine(line);
+                        stopno++;
+                    }
+                }
+                log.Close();
+                Cursor.Current = Cursors.Default;
+                MessageBox.Show("Fisierul a fost salvat!", "Export fisier turnee", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+                MessageBox.Show("Nu au fost calculate rute!");
+        }
+        private void btClose_Click(object sender, EventArgs e)
+        {
+            bool toClose = true;
+            if (StadiuCalcul >= stadiu.S2_Precalcul)
+                if (MessageBox.Show("Exista rute calculate. Doriti sa inchideti?", "Terminare program", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    toClose = false;
+            if (toClose)
+            {
+                SaveSettings();
+                this.Close();
+            }
+        }
     }
 }

@@ -556,7 +556,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(932, 544);
+            this.tabPage1.Size = new System.Drawing.Size(689, 383);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Clienti";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -567,7 +567,7 @@
             this.dgvClienti.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvClienti.Location = new System.Drawing.Point(3, 3);
             this.dgvClienti.Name = "dgvClienti";
-            this.dgvClienti.Size = new System.Drawing.Size(926, 538);
+            this.dgvClienti.Size = new System.Drawing.Size(683, 377);
             this.dgvClienti.TabIndex = 2;
             // 
             // tabPage4
@@ -575,7 +575,7 @@
             this.tabPage4.Controls.Add(this.dgvRute);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(932, 544);
+            this.tabPage4.Size = new System.Drawing.Size(689, 383);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Rute";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -587,7 +587,7 @@
             this.dgvRute.Location = new System.Drawing.Point(0, 0);
             this.dgvRute.Name = "dgvRute";
             this.dgvRute.ReadOnly = true;
-            this.dgvRute.Size = new System.Drawing.Size(932, 544);
+            this.dgvRute.Size = new System.Drawing.Size(689, 383);
             this.dgvRute.TabIndex = 6;
             // 
             // tabPage3
@@ -595,7 +595,7 @@
             this.tabPage3.Controls.Add(this.dgvSavings);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(932, 544);
+            this.tabPage3.Size = new System.Drawing.Size(689, 383);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Savings";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -607,7 +607,7 @@
             this.dgvSavings.Location = new System.Drawing.Point(0, 0);
             this.dgvSavings.Name = "dgvSavings";
             this.dgvSavings.ReadOnly = true;
-            this.dgvSavings.Size = new System.Drawing.Size(932, 544);
+            this.dgvSavings.Size = new System.Drawing.Size(689, 383);
             this.dgvSavings.TabIndex = 5;
             // 
             // btnPrecalcul
@@ -619,6 +619,7 @@
             this.btnPrecalcul.TabIndex = 19;
             this.btnPrecalcul.Text = "Precalcul SD";
             this.btnPrecalcul.UseVisualStyleBackColor = true;
+            this.btnPrecalcul.Click += new System.EventHandler(this.btnPrecalcul_Click);
             // 
             // btClose
             // 
@@ -630,6 +631,7 @@
             this.btClose.TabIndex = 16;
             this.btClose.Text = "&Close";
             this.btClose.UseVisualStyleBackColor = true;
+            this.btClose.Click += new System.EventHandler(this.btClose_Click);
             // 
             // btExportFile
             // 
@@ -640,6 +642,7 @@
             this.btExportFile.TabIndex = 18;
             this.btExportFile.Text = "Export rute";
             this.btExportFile.UseVisualStyleBackColor = true;
+            this.btExportFile.Click += new System.EventHandler(this.btExportFile_Click);
             // 
             // btLoadFile
             // 
@@ -650,6 +653,7 @@
             this.btLoadFile.TabIndex = 15;
             this.btLoadFile.Text = "Load file";
             this.btLoadFile.UseVisualStyleBackColor = true;
+            this.btLoadFile.Click += new System.EventHandler(this.btLoadFile_Click);
             // 
             // btRoute
             // 
@@ -660,6 +664,7 @@
             this.btRoute.TabIndex = 17;
             this.btRoute.Text = "Calcul Rute";
             this.btRoute.UseVisualStyleBackColor = true;
+            this.btRoute.Click += new System.EventHandler(this.btRoute_Click);
             // 
             // frmMain
             // 
